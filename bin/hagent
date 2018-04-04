@@ -1,0 +1,53 @@
+#!/usr/bin/env ruby
+
+require 'hagent'
+require 'thor'
+require 'colorize'
+require 'os'
+
+class HagentApp < Thor
+	package_name "hagent"
+	default_task :all
+
+
+	class_option :format, type: :boolean, desc: "Format values to human readable", default: true
+
+
+	desc "all", "Print all info"
+	def all
+		HagentApp.new.cpu
+		HagentApp.new.memory
+		HagentApp.new.drive
+	end
+
+
+	desc "cpu", "Print CPU info"
+	def cpu
+		puts "# CPU Infos: ".green
+		Hagent::Info.cpu.each do |k,v|
+			puts "  -> #{k.to_s.split('_').join(' ')} : #{v}".yellow
+		end
+	end
+
+
+	desc "memory", "Print memory info"
+	def memory
+		puts "# Memory Infos: ".green
+		Hagent::Info.memory.each do |k,v|
+			puts "  -> #{k.to_s.split('_').join(' ')} : #{v}".yellow
+		end
+	end
+
+ 
+	desc "drive", "Print local drive info"
+	def drive
+		puts "# Drive Infos: ".green
+		Hagent::Info.drive.each do |k,v|
+			puts "  -> #{k.to_s.split('_').join(' ')} : #{v}".yellow
+		end
+	end
+end
+
+
+
+HagentApp.start(ARGV)
